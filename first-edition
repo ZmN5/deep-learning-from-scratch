@@ -1,1 +1,858 @@
-{"metadata":{"kernelspec":{"language":"python","display_name":"Python 3","name":"python3"},"language_info":{"name":"python","version":"3.10.13","mimetype":"text/x-python","codemirror_mode":{"name":"ipython","version":3},"pygments_lexer":"ipython3","nbconvert_exporter":"python","file_extension":".py"},"kaggle":{"accelerator":"none","dataSources":[{"sourceId":8702498,"sourceType":"datasetVersion","datasetId":5219531}],"isInternetEnabled":true,"language":"python","sourceType":"notebook","isGpuEnabled":false}},"nbformat_minor":4,"nbformat":4,"cells":[{"cell_type":"code","source":"# This Python 3 environment comes with many helpful analytics libraries installed\n# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python\n# For example, here's several helpful packages to load\n\nimport numpy as np # linear algebra\nimport pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n\n# Input data files are available in the read-only \"../input/\" directory\n# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory\n\nimport os\nfor dirname, _, filenames in os.walk('/kaggle/input'):\n    for filename in filenames:\n        print(os.path.join(dirname, filename))\n\n# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using \"Save & Run All\" \n# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session","metadata":{"_uuid":"8f2839f25d086af736a60e9eeb907d3b93b6e0e5","_cell_guid":"b1076dfc-b9ad-4769-8c92-a6c4dae69d19","execution":{"iopub.status.busy":"2024-06-22T08:25:53.572024Z","iopub.execute_input":"2024-06-22T08:25:53.572455Z","iopub.status.idle":"2024-06-22T08:25:53.592680Z","shell.execute_reply.started":"2024-06-22T08:25:53.572419Z","shell.execute_reply":"2024-06-22T08:25:53.591477Z"},"trusted":true},"execution_count":3,"outputs":[{"name":"stdout","text":"/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/LICENSE.md\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/.gitignore\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/README.md\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/nand_gate.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/xor_gate.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/or_gate.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/and_gate.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/train_deepnet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/deep_convnet_params.pkl\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/misclassified_mnist.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/awesome_net.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/half_float_network.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/deep_convnet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/neuralnet_mnist.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/mnist_show.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/neuralnet_mnist_batch.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/sig_step_compare.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/sample_weight.pkl\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/sigmoid.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/relu.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/step_function.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/params.pkl\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/simple_convnet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/gradient_check.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/apply_filter.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/train_convnet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/visualize_filter.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/lena_gray.png\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/mnist.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/lena.png\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/__init__.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/hungry.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/img_show.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/sin_graph.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/sin_cos_graph.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/simple_graph.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/man.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/buy_apple.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/layer_naive.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/gradient_check.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/train_neuralnet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/two_layer_net.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/buy_apple_orange.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/trainer.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/multi_layer_net_extend.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/multi_layer_net.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/layers.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/optimizer.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/gradient.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/functions.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/__init__.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/util.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/optimizer_compare_naive.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/overfit_weight_decay.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/batch_norm_gradient_check.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/overfit_dropout.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/batch_norm_test.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/weight_init_activation_histogram.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/optimizer_compare_mnist.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/hyperparameter_optimization.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/weight_init_compare.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_2d.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_method.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_simplenet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/train_neuralnet.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_1d.py\n/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/two_layer_net.py\n","output_type":"stream"}]},{"cell_type":"code","source":"!git clone https://github.com/oreilly-japan/deep-learning-from-scratch.git","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:53.594695Z","iopub.execute_input":"2024-06-22T08:25:53.595037Z","iopub.status.idle":"2024-06-22T08:25:54.727224Z","shell.execute_reply.started":"2024-06-22T08:25:53.595006Z","shell.execute_reply":"2024-06-22T08:25:54.725908Z"},"trusted":true},"execution_count":4,"outputs":[{"name":"stdout","text":"fatal: destination path 'deep-learning-from-scratch' already exists and is not an empty directory.\n","output_type":"stream"}]},{"cell_type":"code","source":"%cd deep-learning-from-scratch/","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.730099Z","iopub.execute_input":"2024-06-22T08:25:54.730651Z","iopub.status.idle":"2024-06-22T08:25:54.739332Z","shell.execute_reply.started":"2024-06-22T08:25:54.730603Z","shell.execute_reply":"2024-06-22T08:25:54.738071Z"},"trusted":true},"execution_count":5,"outputs":[{"name":"stdout","text":"/kaggle/working/deep-learning-from-scratch\n","output_type":"stream"}]},{"cell_type":"code","source":"def softmax(x):\n    x = x - np.max(x, axis=-1, keepdims=True)\n    return np.exp(x) / np.sum(np.exp(x), axis=-1, keepdims=True)\n","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.740996Z","iopub.execute_input":"2024-06-22T08:25:54.741455Z","iopub.status.idle":"2024-06-22T08:25:54.751154Z","shell.execute_reply.started":"2024-06-22T08:25:54.741409Z","shell.execute_reply":"2024-06-22T08:25:54.750048Z"},"trusted":true},"execution_count":6,"outputs":[]},{"cell_type":"code","source":"import sys, os\nsys.path.append(os.pardir)\nfrom dataset.mnist import load_mnist\n","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.754445Z","iopub.execute_input":"2024-06-22T08:25:54.754825Z","iopub.status.idle":"2024-06-22T08:25:54.767975Z","shell.execute_reply.started":"2024-06-22T08:25:54.754787Z","shell.execute_reply":"2024-06-22T08:25:54.766829Z"},"trusted":true},"execution_count":7,"outputs":[]},{"cell_type":"code","source":"import pickle\n\n\ndef softmax(x):\n    x = x - np.max(x, axis=-1, keepdims=True)\n    return np.exp(x) / np.sum(np.exp(x), axis=-1, keepdims=True)\n\n\ndef get_data():\n    \n    (x_train, t_train), (x_test, t_test) = load_mnist(flatten=True, normalize=False, one_hot_label=False)\n    return x_test, t_test\n    \ndef init_network():\n    with open(\"ch03/sample_weight.pkl\", 'rb') as f:\n        network = pickle.load(f)\n        return network\n    \ndef predict(network, x):\n    w1, w2, w3 = network['W1'], network['W2'], network['W3']\n    b1, b2, b3 = network['b1'], network['b2'], network['b3']\n    \n    a1 = np.dot(x, w1)+b1\n    z1 = sigmoid(a1)\n    \n    a2 = np.dot(z1, w2) + b2\n    z2 = sigmoid(a2)\n    \n    a3 = np.dot(z2, w3) + b3\n    y = softmax(a3)\n    return y","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.769334Z","iopub.execute_input":"2024-06-22T08:25:54.769713Z","iopub.status.idle":"2024-06-22T08:25:54.781725Z","shell.execute_reply.started":"2024-06-22T08:25:54.769683Z","shell.execute_reply":"2024-06-22T08:25:54.780431Z"},"trusted":true},"execution_count":8,"outputs":[]},{"cell_type":"code","source":"def cross_entropy_error(y, t):\n    if y.ndim == 1:\n        t = t.reshape(1, t.size)\n        y = y.reshape(1, y.size)\n    batch_size = y.shape[0]\n    return -np.sum(t*np.log(y + 1e-7)) / batch_size","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.783721Z","iopub.execute_input":"2024-06-22T08:25:54.784240Z","iopub.status.idle":"2024-06-22T08:25:54.797902Z","shell.execute_reply.started":"2024-06-22T08:25:54.784198Z","shell.execute_reply":"2024-06-22T08:25:54.796754Z"},"trusted":true},"execution_count":9,"outputs":[]},{"cell_type":"code","source":"class MulLayer:\n    def __init__(self):\n        self.x = None\n        self.y = None\n        \n    def forward(self, x, y):\n        self.x = x\n        self.y = y\n        out = x * y\n        return out\n    \n    def backward(self, dout):\n        dx = dout * self.y\n        dy = dout * self.x\n        return dx, dy\n    ","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.799611Z","iopub.execute_input":"2024-06-22T08:25:54.800073Z","iopub.status.idle":"2024-06-22T08:25:54.813453Z","shell.execute_reply.started":"2024-06-22T08:25:54.800033Z","shell.execute_reply":"2024-06-22T08:25:54.812468Z"},"trusted":true},"execution_count":10,"outputs":[]},{"cell_type":"code","source":"class AddLayer:\n    def __init__(self):\n        pass\n        \n    def forward(self, x, y):\n        return x + y\n    \n    def backward(self, dout):\n        return dout, dout","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.814722Z","iopub.execute_input":"2024-06-22T08:25:54.815072Z","iopub.status.idle":"2024-06-22T08:25:54.829645Z","shell.execute_reply.started":"2024-06-22T08:25:54.815029Z","shell.execute_reply":"2024-06-22T08:25:54.828566Z"},"trusted":true},"execution_count":11,"outputs":[]},{"cell_type":"code","source":"class Relu:\n    def __init__(self):\n        self.mask = None\n        \n    def forward(self, x):\n        self.mask = (x <= 0)\n        out = x.copy()\n        out[self.mask] = 0\n        return out\n        \n    def backward(self, dout):\n        dout[self.mask] = 0\n        dx = dout\n        return dx","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.831033Z","iopub.execute_input":"2024-06-22T08:25:54.831384Z","iopub.status.idle":"2024-06-22T08:25:54.841498Z","shell.execute_reply.started":"2024-06-22T08:25:54.831354Z","shell.execute_reply":"2024-06-22T08:25:54.840418Z"},"trusted":true},"execution_count":12,"outputs":[]},{"cell_type":"code","source":"class Sigmoid:\n    def __init__(self):\n        self.x = None\n        \n    def forward(self, x):\n        out = 1 / (1 + np.exp(-x))\n        self.out = out\n        return out\n    \n    def backward(self, dout):\n        dx = dout * (1.0 - self.out) * self.out\n        return dx","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.845623Z","iopub.execute_input":"2024-06-22T08:25:54.846026Z","iopub.status.idle":"2024-06-22T08:25:54.855284Z","shell.execute_reply.started":"2024-06-22T08:25:54.845994Z","shell.execute_reply":"2024-06-22T08:25:54.854271Z"},"trusted":true},"execution_count":13,"outputs":[]},{"cell_type":"code","source":"class Affine:\n    def __init__(self, W, b):\n        self.W = W\n        self.b = b\n        self.x = None\n        self.dW = None\n        self.db = None\n        \n    def forward(self, x):\n        self.x = x\n        out = np.dot(x, self.W) + self.b\n        return out\n    \n    def backward(self, dout):\n        dx = np.dot(dout, self.W.T)\n        self.dW = np.dot(self.x.T, dout)\n        self.db = np.sum(dout, axis=0)\n        return dx","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.856819Z","iopub.execute_input":"2024-06-22T08:25:54.857159Z","iopub.status.idle":"2024-06-22T08:25:54.874718Z","shell.execute_reply.started":"2024-06-22T08:25:54.857130Z","shell.execute_reply":"2024-06-22T08:25:54.873472Z"},"trusted":true},"execution_count":14,"outputs":[]},{"cell_type":"code","source":"class SoftmaxWithLoss:\n    def __init__(self):\n        self.loss = None\n        self.y = None\n        self.t = None\n        \n    def forward(self, x, t):\n        self.t = t\n        self.y = softmax(x)\n        self.loss = cross_entropy_error(self.y, self.t)\n        return self.loss\n    \n    def backward(self, dout=1):\n        batch_size = self.t.shape[0]\n        dx = (self.y - self.t) / batch_size\n        return dx","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.876072Z","iopub.execute_input":"2024-06-22T08:25:54.876529Z","iopub.status.idle":"2024-06-22T08:25:54.887200Z","shell.execute_reply.started":"2024-06-22T08:25:54.876489Z","shell.execute_reply":"2024-06-22T08:25:54.885832Z"},"trusted":true},"execution_count":15,"outputs":[]},{"cell_type":"code","source":"\nclass TwoLayerNet:\n    def __init__(self, input_size, hidden_size, output_size,\n                weight_init_std=0.01):\n        self.params = {}\n        self.params['W1'] = weight_init_std * np.random.randn(input_size, hidden_size)\n        self.params['b1'] = np.zeros(hidden_size)\n        self.params['W2'] = weight_init_std * np.random.randn(hidden_size, output_size)\n        self.params['b2'] = np.zeros(output_size)\n        \n        self.layers = dict()\n        self.layers['Affine1'] = Affine(self.params['W1'], self.params['b1'])\n        self.layers['Relu1'] = Relu()\n        self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])\n        \n        self.lastlayer = SoftmaxWithLoss()\n        \n    def predict(self, x):\n        for layer in self.layers.values():\n            x = layer.forward(x)\n\n            \n        return x\n    \n    \n    def loss(self, x, t):\n        y = self.predict(x)\n        return self.lastlayer.forward(y, t)\n    \n    \n    def accuracy(self, x, t):\n        y = self.predict(x)\n        y = np.argmax(y, axis=1)\n        if t.ndim!=1:\n            t = np.argmax(t, axis=1)\n        accuracy = np.sum(y==t) / float(x.shape[0])\n        return accuracy\n    \n    def gradient(self, x, t):\n        self.loss(x, t)\n\n        \n        dout = 1\n        dout = self.lastlayer.backward(dout)\n        \n        layers = list(self.layers.values())\n        layers.reverse()\n        \n        for layer in layers:\n            # print(f'lllllllllayer: {layer}, {dout}')\n            dout = layer.backward(dout)\n\n            \n        grads = {}\n        grads['W1'] = self.layers['Affine1'].dW\n        grads['b1'] = self.layers['Affine1'].db\n        grads['W2'] = self.layers['Affine2'].dW\n        grads['b2'] = self.layers['Affine2'].db\n        return grads","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:25:54.888775Z","iopub.execute_input":"2024-06-22T08:25:54.889153Z","iopub.status.idle":"2024-06-22T08:25:54.906983Z","shell.execute_reply.started":"2024-06-22T08:25:54.889121Z","shell.execute_reply":"2024-06-22T08:25:54.905629Z"},"trusted":true},"execution_count":16,"outputs":[]},{"cell_type":"code","source":"(x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, one_hot_label=True)\nnetwork = TwoLayerNet(input_size=784, hidden_size=50, output_size=10)\n\niters_num = 10000\ntrain_size = x_train.shape[0]\nbatch_size = 100\nlearning_rate = 0.09\ntrain_loss_list = []\ntrain_acc_list = []\ntest_acc_list = []\n\niter_per_epoch = max(train_size / batch_size, 1)\n\nfor i in range(iters_num):\n    batch_mask = np.random.choice(train_size, batch_size)\n    x_batch = x_train[batch_mask]\n    t_batch = t_train[batch_mask]\n    grad = network.gradient(x_batch, t_batch)\n    \n    for key in ['W1', 'b1', 'W2', 'b2']:\n        network.params[key] -= learning_rate * grad[key]\n    \n    loss = network.loss(x_batch, t_batch)\n    train_loss_list.append(loss)\n    \n    \n    if i % iter_per_epoch == 0:\n        train_acc = network.accuracy(x_train, t_train)\n        test_acc = network.accuracy(x_test, t_test)\n        train_acc_list.append(train_acc)\n        test_acc_list.append(test_acc)\n        print(train_acc, test_acc)","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:36:33.725022Z","iopub.execute_input":"2024-06-22T08:36:33.725460Z","iopub.status.idle":"2024-06-22T08:37:18.001406Z","shell.execute_reply.started":"2024-06-22T08:36:33.725420Z","shell.execute_reply":"2024-06-22T08:37:17.999791Z"},"trusted":true},"execution_count":21,"outputs":[{"name":"stdout","text":"0.11145 0.1204\n0.9004666666666666 0.9029\n0.92165 0.925\n0.931 0.9289\n0.94125 0.9391\n0.9488666666666666 0.9451\n0.95475 0.9529\n0.95785 0.9533\n0.96105 0.9559\n0.9643166666666667 0.9577\n0.96855 0.9608\n0.9692833333333334 0.9622\n0.9723166666666667 0.9642\n0.9739166666666667 0.9661\n0.9755666666666667 0.9672\n0.97675 0.9683\n0.9785166666666667 0.9693\n","output_type":"stream"}]},{"cell_type":"code","source":"class SGD:\n    def __init__(self, lr=0.01):\n        self.lr = lr\n        \n    def update(self, params, grads):\n        for key in params.keys():\n            params[key] -= self.lr * grads[key]","metadata":{"execution":{"iopub.status.busy":"2024-06-22T08:46:50.586737Z","iopub.execute_input":"2024-06-22T08:46:50.587174Z","iopub.status.idle":"2024-06-22T08:46:50.594047Z","shell.execute_reply.started":"2024-06-22T08:46:50.587139Z","shell.execute_reply":"2024-06-22T08:46:50.592530Z"},"trusted":true},"execution_count":25,"outputs":[]},{"cell_type":"code","source":"class Momentum:\n    def __init__(self, lr=0.01, momentum=0.9):\n        self.lr = lr\n        self.mementum = momentum\n        self.v = None\n    \n    def update(self, params, grads):\n        if self.v is None:\n            self.v = {}\n            for k, v in params.items():\n                self.v[k] = np.zeros_like(val)\n        for key in params.keys():\n            self.v[key] = self.mementum*self.v[key] - grads[k] * self.lr\n            params[key] += self.v[key]","metadata":{},"execution_count":null,"outputs":[]}]}
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "3dfa03cb",
+   "metadata": {
+    "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
+    "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:14.023560Z",
+     "iopub.status.busy": "2024-06-23T01:42:14.023119Z",
+     "iopub.status.idle": "2024-06-23T01:42:15.015772Z",
+     "shell.execute_reply": "2024-06-23T01:42:15.014587Z"
+    },
+    "papermill": {
+     "duration": 1.002448,
+     "end_time": "2024-06-23T01:42:15.018633",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:14.016185",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/LICENSE.md\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/.gitignore\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/README.md\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/nand_gate.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/xor_gate.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/or_gate.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch02/and_gate.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/train_deepnet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/deep_convnet_params.pkl\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/misclassified_mnist.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/awesome_net.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/half_float_network.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch08/deep_convnet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/neuralnet_mnist.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/mnist_show.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/neuralnet_mnist_batch.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/sig_step_compare.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/sample_weight.pkl\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/sigmoid.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/relu.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch03/step_function.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/params.pkl\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/simple_convnet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/gradient_check.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/apply_filter.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/train_convnet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch07/visualize_filter.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/lena_gray.png\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/mnist.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/lena.png\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/dataset/__init__.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/hungry.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/img_show.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/sin_graph.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/sin_cos_graph.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/simple_graph.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch01/man.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/buy_apple.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/layer_naive.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/gradient_check.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/train_neuralnet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/two_layer_net.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch05/buy_apple_orange.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/trainer.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/multi_layer_net_extend.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/multi_layer_net.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/layers.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/optimizer.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/gradient.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/functions.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/__init__.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/common/util.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/optimizer_compare_naive.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/overfit_weight_decay.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/batch_norm_gradient_check.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/overfit_dropout.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/batch_norm_test.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/weight_init_activation_histogram.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/optimizer_compare_mnist.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/hyperparameter_optimization.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch06/weight_init_compare.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_2d.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_method.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_simplenet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/train_neuralnet.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/gradient_1d.py\n",
+      "/kaggle/input/dlfs-utils/��Դ���롿���ѧϰ���ţ�����Python��������ʵ��/ch04/two_layer_net.py\n"
+     ]
+    }
+   ],
+   "source": [
+    "# This Python 3 environment comes with many helpful analytics libraries installed\n",
+    "# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python\n",
+    "# For example, here's several helpful packages to load\n",
+    "\n",
+    "import numpy as np # linear algebra\n",
+    "import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n",
+    "\n",
+    "# Input data files are available in the read-only \"../input/\" directory\n",
+    "# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory\n",
+    "\n",
+    "import os\n",
+    "for dirname, _, filenames in os.walk('/kaggle/input'):\n",
+    "    for filename in filenames:\n",
+    "        print(os.path.join(dirname, filename))\n",
+    "\n",
+    "# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using \"Save & Run All\" \n",
+    "# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "ce3440e1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:15.032411Z",
+     "iopub.status.busy": "2024-06-23T01:42:15.031891Z",
+     "iopub.status.idle": "2024-06-23T01:42:16.915698Z",
+     "shell.execute_reply": "2024-06-23T01:42:16.914402Z"
+    },
+    "papermill": {
+     "duration": 1.893392,
+     "end_time": "2024-06-23T01:42:16.918402",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:15.025010",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Cloning into 'deep-learning-from-scratch'...\r\n",
+      "remote: Enumerating objects: 569, done.\u001b[K\r\n",
+      "remote: Counting objects: 100% (16/16), done.\u001b[K\r\n",
+      "remote: Compressing objects: 100% (15/15), done.\u001b[K\r\n",
+      "remote: Total 569 (delta 2), reused 7 (delta 0), pack-reused 553\u001b[K\r\n",
+      "Receiving objects: 100% (569/569), 10.61 MiB | 33.83 MiB/s, done.\r\n",
+      "Resolving deltas: 100% (289/289), done.\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!git clone https://github.com/oreilly-japan/deep-learning-from-scratch.git"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "4df93fcc",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:16.931904Z",
+     "iopub.status.busy": "2024-06-23T01:42:16.931461Z",
+     "iopub.status.idle": "2024-06-23T01:42:16.939519Z",
+     "shell.execute_reply": "2024-06-23T01:42:16.938290Z"
+    },
+    "papermill": {
+     "duration": 0.01762,
+     "end_time": "2024-06-23T01:42:16.941743",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:16.924123",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "/kaggle/working/deep-learning-from-scratch\n"
+     ]
+    }
+   ],
+   "source": [
+    "%cd deep-learning-from-scratch/"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "e1000469",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:16.954735Z",
+     "iopub.status.busy": "2024-06-23T01:42:16.954337Z",
+     "iopub.status.idle": "2024-06-23T01:42:16.960578Z",
+     "shell.execute_reply": "2024-06-23T01:42:16.959512Z"
+    },
+    "papermill": {
+     "duration": 0.01545,
+     "end_time": "2024-06-23T01:42:16.962917",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:16.947467",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def softmax(x):\n",
+    "    x = x - np.max(x, axis=-1, keepdims=True)\n",
+    "    return np.exp(x) / np.sum(np.exp(x), axis=-1, keepdims=True)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "6f761acb",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:16.975919Z",
+     "iopub.status.busy": "2024-06-23T01:42:16.975528Z",
+     "iopub.status.idle": "2024-06-23T01:42:16.984113Z",
+     "shell.execute_reply": "2024-06-23T01:42:16.983047Z"
+    },
+    "papermill": {
+     "duration": 0.018245,
+     "end_time": "2024-06-23T01:42:16.986818",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:16.968573",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import sys, os\n",
+    "sys.path.append(os.pardir)\n",
+    "from dataset.mnist import load_mnist\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "8223bfed",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.000308Z",
+     "iopub.status.busy": "2024-06-23T01:42:16.999894Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.010178Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.008893Z"
+    },
+    "papermill": {
+     "duration": 0.019897,
+     "end_time": "2024-06-23T01:42:17.012638",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:16.992741",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import pickle\n",
+    "\n",
+    "\n",
+    "def softmax(x):\n",
+    "    x = x - np.max(x, axis=-1, keepdims=True)\n",
+    "    return np.exp(x) / np.sum(np.exp(x), axis=-1, keepdims=True)\n",
+    "\n",
+    "\n",
+    "def get_data():\n",
+    "    \n",
+    "    (x_train, t_train), (x_test, t_test) = load_mnist(flatten=True, normalize=False, one_hot_label=False)\n",
+    "    return x_test, t_test\n",
+    "    \n",
+    "def init_network():\n",
+    "    with open(\"ch03/sample_weight.pkl\", 'rb') as f:\n",
+    "        network = pickle.load(f)\n",
+    "        return network\n",
+    "    \n",
+    "def predict(network, x):\n",
+    "    w1, w2, w3 = network['W1'], network['W2'], network['W3']\n",
+    "    b1, b2, b3 = network['b1'], network['b2'], network['b3']\n",
+    "    \n",
+    "    a1 = np.dot(x, w1)+b1\n",
+    "    z1 = sigmoid(a1)\n",
+    "    \n",
+    "    a2 = np.dot(z1, w2) + b2\n",
+    "    z2 = sigmoid(a2)\n",
+    "    \n",
+    "    a3 = np.dot(z2, w3) + b3\n",
+    "    y = softmax(a3)\n",
+    "    return y"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "92a9aeb3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.025979Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.025563Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.031472Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.030406Z"
+    },
+    "papermill": {
+     "duration": 0.015111,
+     "end_time": "2024-06-23T01:42:17.033582",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.018471",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def cross_entropy_error(y, t):\n",
+    "    if y.ndim == 1:\n",
+    "        t = t.reshape(1, t.size)\n",
+    "        y = y.reshape(1, y.size)\n",
+    "    batch_size = y.shape[0]\n",
+    "    return -np.sum(t*np.log(y + 1e-7)) / batch_size"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "b3f1a4c7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.046581Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.046202Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.052320Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.051318Z"
+    },
+    "papermill": {
+     "duration": 0.015161,
+     "end_time": "2024-06-23T01:42:17.054475",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.039314",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class MulLayer:\n",
+    "    def __init__(self):\n",
+    "        self.x = None\n",
+    "        self.y = None\n",
+    "        \n",
+    "    def forward(self, x, y):\n",
+    "        self.x = x\n",
+    "        self.y = y\n",
+    "        out = x * y\n",
+    "        return out\n",
+    "    \n",
+    "    def backward(self, dout):\n",
+    "        dx = dout * self.y\n",
+    "        dy = dout * self.x\n",
+    "        return dx, dy\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "772652d5",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.068067Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.067061Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.072931Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.071800Z"
+    },
+    "papermill": {
+     "duration": 0.014996,
+     "end_time": "2024-06-23T01:42:17.075190",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.060194",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class AddLayer:\n",
+    "    def __init__(self):\n",
+    "        pass\n",
+    "        \n",
+    "    def forward(self, x, y):\n",
+    "        return x + y\n",
+    "    \n",
+    "    def backward(self, dout):\n",
+    "        return dout, dout"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "01fa37c8",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.088201Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.087794Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.093779Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.092752Z"
+    },
+    "papermill": {
+     "duration": 0.015128,
+     "end_time": "2024-06-23T01:42:17.095951",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.080823",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class Relu:\n",
+    "    def __init__(self):\n",
+    "        self.mask = None\n",
+    "        \n",
+    "    def forward(self, x):\n",
+    "        self.mask = (x <= 0)\n",
+    "        out = x.copy()\n",
+    "        out[self.mask] = 0\n",
+    "        return out\n",
+    "        \n",
+    "    def backward(self, dout):\n",
+    "        dout[self.mask] = 0\n",
+    "        dx = dout\n",
+    "        return dx"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "c1b13963",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.108947Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.108594Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.114814Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.113541Z"
+    },
+    "papermill": {
+     "duration": 0.015325,
+     "end_time": "2024-06-23T01:42:17.116981",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.101656",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class Sigmoid:\n",
+    "    def __init__(self):\n",
+    "        self.x = None\n",
+    "        \n",
+    "    def forward(self, x):\n",
+    "        out = 1 / (1 + np.exp(-x))\n",
+    "        self.out = out\n",
+    "        return out\n",
+    "    \n",
+    "    def backward(self, dout):\n",
+    "        dx = dout * (1.0 - self.out) * self.out\n",
+    "        return dx"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "686b03c0",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.129969Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.129602Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.136606Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.135371Z"
+    },
+    "papermill": {
+     "duration": 0.016274,
+     "end_time": "2024-06-23T01:42:17.138903",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.122629",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class Affine:\n",
+    "    def __init__(self, W, b):\n",
+    "        self.W = W\n",
+    "        self.b = b\n",
+    "        self.x = None\n",
+    "        self.dW = None\n",
+    "        self.db = None\n",
+    "        \n",
+    "    def forward(self, x):\n",
+    "        self.x = x\n",
+    "        out = np.dot(x, self.W) + self.b\n",
+    "        return out\n",
+    "    \n",
+    "    def backward(self, dout):\n",
+    "        dx = np.dot(dout, self.W.T)\n",
+    "        self.dW = np.dot(self.x.T, dout)\n",
+    "        self.db = np.sum(dout, axis=0)\n",
+    "        return dx"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "01db83f0",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.152044Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.151690Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.158315Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.157169Z"
+    },
+    "papermill": {
+     "duration": 0.016057,
+     "end_time": "2024-06-23T01:42:17.160657",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.144600",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class SoftmaxWithLoss:\n",
+    "    def __init__(self):\n",
+    "        self.loss = None\n",
+    "        self.y = None\n",
+    "        self.t = None\n",
+    "        \n",
+    "    def forward(self, x, t):\n",
+    "        self.t = t\n",
+    "        self.y = softmax(x)\n",
+    "        self.loss = cross_entropy_error(self.y, self.t)\n",
+    "        return self.loss\n",
+    "    \n",
+    "    def backward(self, dout=1):\n",
+    "        batch_size = self.t.shape[0]\n",
+    "        dx = (self.y - self.t) / batch_size\n",
+    "        return dx"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "0f798718",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.173968Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.173584Z",
+     "iopub.status.idle": "2024-06-23T01:42:17.186949Z",
+     "shell.execute_reply": "2024-06-23T01:42:17.185867Z"
+    },
+    "papermill": {
+     "duration": 0.022988,
+     "end_time": "2024-06-23T01:42:17.189430",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.166442",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "\n",
+    "class TwoLayerNet:\n",
+    "    def __init__(self, input_size, hidden_size, output_size,\n",
+    "                weight_init_std=0.01):\n",
+    "        self.params = {}\n",
+    "        self.params['W1'] = weight_init_std * np.random.randn(input_size, hidden_size)\n",
+    "        self.params['b1'] = np.zeros(hidden_size)\n",
+    "        self.params['W2'] = weight_init_std * np.random.randn(hidden_size, output_size)\n",
+    "        self.params['b2'] = np.zeros(output_size)\n",
+    "        \n",
+    "        self.layers = dict()\n",
+    "        self.layers['Affine1'] = Affine(self.params['W1'], self.params['b1'])\n",
+    "        self.layers['Relu1'] = Relu()\n",
+    "        self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])\n",
+    "        \n",
+    "        self.lastlayer = SoftmaxWithLoss()\n",
+    "        \n",
+    "    def predict(self, x):\n",
+    "        for layer in self.layers.values():\n",
+    "            x = layer.forward(x)\n",
+    "\n",
+    "            \n",
+    "        return x\n",
+    "    \n",
+    "    \n",
+    "    def loss(self, x, t):\n",
+    "        y = self.predict(x)\n",
+    "        return self.lastlayer.forward(y, t)\n",
+    "    \n",
+    "    \n",
+    "    def accuracy(self, x, t):\n",
+    "        y = self.predict(x)\n",
+    "        y = np.argmax(y, axis=1)\n",
+    "        if t.ndim!=1:\n",
+    "            t = np.argmax(t, axis=1)\n",
+    "        accuracy = np.sum(y==t) / float(x.shape[0])\n",
+    "        return accuracy\n",
+    "    \n",
+    "    def gradient(self, x, t):\n",
+    "        self.loss(x, t)\n",
+    "\n",
+    "        \n",
+    "        dout = 1\n",
+    "        dout = self.lastlayer.backward(dout)\n",
+    "        \n",
+    "        layers = list(self.layers.values())\n",
+    "        layers.reverse()\n",
+    "        \n",
+    "        for layer in layers:\n",
+    "            # print(f'lllllllllayer: {layer}, {dout}')\n",
+    "            dout = layer.backward(dout)\n",
+    "\n",
+    "            \n",
+    "        grads = {}\n",
+    "        grads['W1'] = self.layers['Affine1'].dW\n",
+    "        grads['b1'] = self.layers['Affine1'].db\n",
+    "        grads['W2'] = self.layers['Affine2'].dW\n",
+    "        grads['b2'] = self.layers['Affine2'].db\n",
+    "        return grads"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "92569433",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:17.202523Z",
+     "iopub.status.busy": "2024-06-23T01:42:17.202141Z",
+     "iopub.status.idle": "2024-06-23T01:42:52.774855Z",
+     "shell.execute_reply": "2024-06-23T01:42:52.773581Z"
+    },
+    "papermill": {
+     "duration": 35.583863,
+     "end_time": "2024-06-23T01:42:52.778916",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:17.195053",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Downloading train-images-idx3-ubyte.gz ... \n",
+      "Done\n",
+      "Downloading train-labels-idx1-ubyte.gz ... \n",
+      "Done\n",
+      "Downloading t10k-images-idx3-ubyte.gz ... \n",
+      "Done\n",
+      "Downloading t10k-labels-idx1-ubyte.gz ... \n",
+      "Done\n",
+      "Converting train-images-idx3-ubyte.gz to NumPy Array ...\n",
+      "Done\n",
+      "Converting train-labels-idx1-ubyte.gz to NumPy Array ...\n",
+      "Done\n",
+      "Converting t10k-images-idx3-ubyte.gz to NumPy Array ...\n",
+      "Done\n",
+      "Converting t10k-labels-idx1-ubyte.gz to NumPy Array ...\n",
+      "Done\n",
+      "Creating pickle file ...\n",
+      "Done!\n",
+      "0.12296666666666667 0.1141\n",
+      "0.9004666666666666 0.9002\n",
+      "0.9195333333333333 0.9204\n",
+      "0.9306166666666666 0.9334\n",
+      "0.9401333333333334 0.9397\n",
+      "0.9481833333333334 0.9453\n",
+      "0.9534 0.948\n",
+      "0.9580333333333333 0.9538\n",
+      "0.9607166666666667 0.9558\n",
+      "0.9646 0.9591\n",
+      "0.9666666666666667 0.9609\n",
+      "0.9674 0.9606\n",
+      "0.9704166666666667 0.9624\n",
+      "0.9726166666666667 0.9653\n",
+      "0.9729833333333333 0.9653\n",
+      "0.9744666666666667 0.966\n",
+      "0.9760666666666666 0.9679\n"
+     ]
+    }
+   ],
+   "source": [
+    "(x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, one_hot_label=True)\n",
+    "network = TwoLayerNet(input_size=784, hidden_size=50, output_size=10)\n",
+    "\n",
+    "iters_num = 10000\n",
+    "train_size = x_train.shape[0]\n",
+    "batch_size = 100\n",
+    "learning_rate = 0.09\n",
+    "train_loss_list = []\n",
+    "train_acc_list = []\n",
+    "test_acc_list = []\n",
+    "\n",
+    "iter_per_epoch = max(train_size / batch_size, 1)\n",
+    "\n",
+    "for i in range(iters_num):\n",
+    "    batch_mask = np.random.choice(train_size, batch_size)\n",
+    "    x_batch = x_train[batch_mask]\n",
+    "    t_batch = t_train[batch_mask]\n",
+    "    grad = network.gradient(x_batch, t_batch)\n",
+    "    \n",
+    "    for key in ['W1', 'b1', 'W2', 'b2']:\n",
+    "        network.params[key] -= learning_rate * grad[key]\n",
+    "    \n",
+    "    loss = network.loss(x_batch, t_batch)\n",
+    "    train_loss_list.append(loss)\n",
+    "    \n",
+    "    \n",
+    "    if i % iter_per_epoch == 0:\n",
+    "        train_acc = network.accuracy(x_train, t_train)\n",
+    "        test_acc = network.accuracy(x_test, t_test)\n",
+    "        train_acc_list.append(train_acc)\n",
+    "        test_acc_list.append(test_acc)\n",
+    "        print(train_acc, test_acc)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "19b2bf30",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:52.805558Z",
+     "iopub.status.busy": "2024-06-23T01:42:52.804781Z",
+     "iopub.status.idle": "2024-06-23T01:42:52.812926Z",
+     "shell.execute_reply": "2024-06-23T01:42:52.811440Z"
+    },
+    "papermill": {
+     "duration": 0.024992,
+     "end_time": "2024-06-23T01:42:52.816377",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:52.791385",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class SGD:\n",
+    "    def __init__(self, lr=0.01):\n",
+    "        self.lr = lr\n",
+    "        \n",
+    "    def update(self, params, grads):\n",
+    "        for key in params.keys():\n",
+    "            params[key] -= self.lr * grads[key]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "633fa6a3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-23T01:42:52.843150Z",
+     "iopub.status.busy": "2024-06-23T01:42:52.842597Z",
+     "iopub.status.idle": "2024-06-23T01:42:52.852303Z",
+     "shell.execute_reply": "2024-06-23T01:42:52.851155Z"
+    },
+    "papermill": {
+     "duration": 0.02938,
+     "end_time": "2024-06-23T01:42:52.858216",
+     "exception": false,
+     "start_time": "2024-06-23T01:42:52.828836",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class Momentum:\n",
+    "    def __init__(self, lr=0.01, momentum=0.9):\n",
+    "        self.lr = lr\n",
+    "        self.mementum = momentum\n",
+    "        self.v = None\n",
+    "    \n",
+    "    def update(self, params, grads):\n",
+    "        if self.v is None:\n",
+    "            self.v = {}\n",
+    "            for k, v in params.items():\n",
+    "                self.v[k] = np.zeros_like(val)\n",
+    "        for key in params.keys():\n",
+    "            self.v[key] = self.mementum*self.v[key] - grads[k] * self.lr\n",
+    "            params[key] += self.v[key]"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [
+    {
+     "datasetId": 5219531,
+     "sourceId": 8702498,
+     "sourceType": "datasetVersion"
+    }
+   ],
+   "isGpuEnabled": false,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.13"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 42.262227,
+   "end_time": "2024-06-23T01:42:53.404588",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2024-06-23T01:42:11.142361",
+   "version": "2.5.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
